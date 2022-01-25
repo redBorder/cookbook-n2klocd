@@ -13,9 +13,9 @@
   "rdkafka.retry.backoff.ms":"100",
   "blacklist": [
     <%- @n2klocd_managers.each_with_index do |m, i| %>
-    <% if !m["redborder"].nil? %>
-    <%= i==0 ? "" : "," %>"<%= m["redborder"]["manager"]["internal_bond"]["ip"] %>"
-    <% end %>
+    <% if !m["redborder"].nil? %> <%#TODO remove when fixed problem with ip sync in NG%>
+    <%= i==0 ? "" : "," %>"<%= m["redBorder"]["manager"][m["redBorder"]["manager"]["internal_bond"]]["ip"] %>" <%#TODO %>
+    <% end %> <%#TODO remove when fixed problem with ip sync in NG%>
     <% end %>
   ]
   <% if @mse_nodes.size > 0 %>
