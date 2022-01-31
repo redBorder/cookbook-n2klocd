@@ -1,0 +1,63 @@
+{
+  "listeners":[
+    {"proto":"http", "port": <%= @port_meraki %>, "decode_as":"meraki", "num_threads":<%= [ node["cpu"]["total"].to_i - 1, 1].max %>, "mode":"epoll", "connection_timeout": 60, "per_ip_connection_limit": 0, "connection_limit": <%= ( [ node["cpu"]["total"].to_i - 1, 1].max*512 ) %>, "topic":"rb_meraki"},
+    {"proto":"http", "port": <%= @port_HTTP %>, "decode_as":"MSE", "num_threads":<%= [ node["cpu"]["total"].to_i - 1, 1].max %>, "mode":"epoll", "connection_timeout": 60, "per_ip_connection_limit": 0, "connection_limit": <%= ( [ node["cpu"]["total"].to_i - 1, 1].max*512 ) %>, "topic":"rb_loc"},
+    {"proto":"tcp" , "port": <%= @port_n2klocd %>, "decode_as":"MSE", "tcp_keepalive":true, "num_threads": <%= [ node["cpu"]["total"].to_i - 1, 1].max %>, "topic":"rb_loc" }
+  ],
+  "brokers":"<%= @kafka_hosts %>",
+  "rdkafka.socket.max.fails":"3",
+  "rdkafka.socket.keepalive.enable":"true",
+  "rdkafka.queue.buffering.max.messages":"<%= (@memory.nil? ? 1000 : [ @memory/10, 1000].max ) %>",
+  "rdkafka.queue.buffering.max.ms":"1000",
+  "rdkafka.message.send.max.retries":"0",
+  "rdkafka.retry.backoff.ms":"100",
+  "blacklist": [
+    <%- @n2klocd_managers.each_with_index do |m, i| %>
+    <% if !m["redborder"].nil? %> <%#TODO remove when fixed problem with ip sync in NG%>
+    <%= i==0 ? "" : "," %>"<%= m["redBorder"]["manager"][m["redBorder"]["manager"]["internal_bond"]]["ip"] %>" <%#TODO %>
+    <% end %> <%#TODO remove when fixed problem with ip sync in NG%>
+    <% end %>
+  ]
+  <% if @mse_nodes.size > 0 %>
+  <% inserted = false %>
+,"mse-sensors": [
+  <% @mse_nodes.each do |n| %>
+  <% if !n["stream"].nil? and !n["redborder"].nil? and n["redborder"]["parent_id"].nil? %>
+  <% n["stream"].split(",").each do |stream| %>
+    <%= inserted ? ",": " " %>{
+    "stream": "<%= stream %>"
+  ,"enrichment":{
+    "index_partitions": <%= [ 1, ( !n["redborder"].nil? and !n["redborder"]["index_partitions"].nil? ) ? n["redborder"]["index_partitions"].to_i : 5].max %>
+  ,"index_replicas": <%= [ 1, ( !n["redborder"].nil? and !n["redborder"]["index_replicas"].nil? ) ? n["redborder"]["index_replicas"].to_i : 1].max %>
+  ,"sensor_name": "<%= n["rbname"].nil? ? n.name : n["rbname"] %>"
+    <% ["sensor_uuid", "deployment", "deployment_uuid", "namespace", "namespace_uuid", "market", "market_uuid", "organization", "organization_uuid", "service_provider", "service_provider_uuid", "campus", "campus_uuid", "building", "building_uuid", "floor", "floor_uuid" ].each do |ss| %>
+    <% if !n["redborder"][ss].nil? and n["redborder"][ss]!="" %>
+  ,"<%= ss %>": "<%= n["redborder"][ss] %>"
+    <% end %>
+    <% end %>
+    <% inserted=true %>
+  }
+  }
+<% end %>
+<% end %>
+<% end %>
+  <% end %>
+  <% if @meraki_nodes.size>0 %>
+  <% inserted = false %>
+,"meraki-secrets": {
+    <% @meraki_nodes.each do |n| %>
+    <% if !n["redborder"].nil? and !n["redborder"]["meraki_validator"].nil? and !n["redborder"]["meraki_secret"].nil? and n["redborder"]["meraki_validator"]!="" and n["redborder"]["meraki_secret"]!="" and n["redborder"]["parent_id"].nil? %>
+    <%= inserted ? "    ,": " " %>"<%= n["redborder"]["meraki_secret"] %>": {
+      "sensor_name": "<%= n["rbname"].nil? ? n.name : n["rbname"] %>"
+      <% ["sensor_uuid", "deployment", "deployment_uuid", "namespace", "namespace_uuid", "market", "market_uuid", "organization", "organization_uuid", "service_provider", "service_provider_uuid", "campus", "campus_uuid", "building", "building_uuid", "floor", "floor_uuid" ].each do |ss| %>
+      <% if !n["redborder"][ss].nil? and n["redborder"][ss]!="" %>
+    ,"<%= ss %>": "<%= n["redborder"][ss] %>"
+      <% end %>
+      <% end %>
+      <% inserted=true %>
+    }
+    <% end %>
+    <% end %>
+  }
+  <% end %>
+  }
