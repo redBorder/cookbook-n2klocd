@@ -3,7 +3,7 @@
 Cookbook to install and configure n2klocd
 ### Platforms
 
-- Centos 7
+- Rocky Linux 9
 
 ## Authors
 Eduardo Reyes <eareyes@redborder.com>
