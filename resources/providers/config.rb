@@ -17,7 +17,7 @@ action :add do
     n2klocd_managers = new_resource.n2klocd_managers
 
     # install package
-    yum_package "redborder-n2klocd" do
+    dnf_package "redborder-n2klocd" do
       action :upgrade
       flush_cache [ :before ]
     end
