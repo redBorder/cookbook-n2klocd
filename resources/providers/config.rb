@@ -97,7 +97,7 @@ action :register do #Usually used to register in consul
         action :nothing
       end.run_action(:run)
 
-      node.set["n2klocd"]["registered"] = true
+      node.default["n2klocd"]["registered"] = true
     end
     Chef::Log.info("n2klocd service has been registered in consul")
   rescue => e
@@ -113,7 +113,7 @@ action :deregister do #Usually used to deregister from consul
         action :nothing
       end.run_action(:run)
 
-      node.set["n2klocd"]["registered"] = false
+      node.default["n2klocd"]["registered"] = false
     end
     Chef::Log.info("n2klocd service has been deregistered from consul")
   rescue => e
