@@ -17,13 +17,15 @@ action :add do
     n2klocd_managers = new_resource.n2klocd_managers
 
     # install package
-    yum_package "redborder-n2klocd" do
+    dnf_package "redborder-n2klocd" do
       action :upgrade
       flush_cache [ :before ]
     end
 
-    user user do
-      action :create
+    execute "create_user" do
+      command "/usr/sbin/useradd #{user}"
+      ignore_failure true
+      not_if "getent passwd #{user}"
     end
 
     directory logdir do
@@ -97,7 +99,7 @@ action :register do #Usually used to register in consul
         action :nothing
       end.run_action(:run)
 
-      node.set["n2klocd"]["registered"] = true
+      node.normal["n2klocd"]["registered"] = true
     end
     Chef::Log.info("n2klocd service has been registered in consul")
   rescue => e
@@ -113,7 +115,7 @@ action :deregister do #Usually used to deregister from consul
         action :nothing
       end.run_action(:run)
 
-      node.set["n2klocd"]["registered"] = false
+      node.normal["n2klocd"]["registered"] = false
     end
     Chef::Log.info("n2klocd service has been deregistered from consul")
   rescue => e
