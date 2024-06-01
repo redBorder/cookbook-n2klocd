@@ -1,4 +1,3 @@
-#default attributes
-#
+# default attributes
 
-default["n2klocd"]["registered"] = false
+default['n2klocd']['registered'] = false
