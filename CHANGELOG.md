@@ -1,6 +1,11 @@
 cookbook-n2klocd CHANGELOG
 ===============
 
+## 0.1.0
+
+  - Luis Blanco
+    - [55a1a00] Bugfix/#13550 remove login permissions to user (#10)
+
 ## 0.0.3
 
   - Miguel Negron
