@@ -1,6 +1,11 @@
 cookbook-n2klocd CHANGELOG
 ===============
 
+## 0.1.1
+
+  - Miguel Negrón
+    - [65b0cb7] Add pre and postun to clean the cookbook
+
 ## 0.1.0
 
   - Luis Blanco
@@ -8,7 +13,7 @@ cookbook-n2klocd CHANGELOG
 
 ## 0.0.3
 
-  - Miguel Negron
+  - Miguel Negrón
     - [61f3519] lint resources
     - [369ffa2] lint recipes
     - [f7e8cb1] lint providers
