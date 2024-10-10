@@ -23,6 +23,9 @@ chmod -R 0755 %{buildroot}/var/chef/cookbooks/n2klocd
 install -D -m 0644 README.md %{buildroot}/var/chef/cookbooks/n2klocd/README.md
 
 %pre
+if [ -d /var/chef/cookbooks/n2klocd ]; then
+    rm -rf /var/chef/cookbooks/n2klocd
+fi
 
 %post
 case "$1" in
@@ -36,6 +39,12 @@ case "$1" in
   ;;
 esac
 
+%postun
+# Deletes directory when uninstall the package
+if [ "$1" = 0 ] && [ -d /var/chef/cookbooks/n2klocd ]; then
+  rm -rf /var/chef/cookbooks/n2klocd
+fi
+
 systemctl daemon-reload
 %files
 %defattr(0755,root,root)
@@ -46,5 +55,8 @@ systemctl daemon-reload
 %doc
 
 %changelog
-* Wed Jan 20 2022 Eduardo Reyes <eareyes@redborder.com>- 0.0.1
+* Thu Oct 10 2024 Miguel Negrón <manegron@redborder.com>
+- Add pre and postun
+
+* Wed Jan 20 2022 Eduardo Reyes <eareyes@redborder.com>
 - first spec version
