@@ -1,6 +1,11 @@
 cookbook-n2klocd CHANGELOG
 ===============
 
+## 0.1.2
+
+  - nilsver
+    - [8e431bd] remove flush cache
+
 ## 0.1.1
 
   - Miguel Negrón
