@@ -18,7 +18,6 @@ action :add do
     # install package
     dnf_package 'redborder-n2klocd' do
       action :upgrade
-      flush_cache [:before]
     end
 
     execute 'create_user' do
