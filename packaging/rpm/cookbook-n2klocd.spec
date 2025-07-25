@@ -47,7 +47,8 @@ fi
 
 systemctl daemon-reload
 %files
-%defattr(0755,root,root)
+%defattr(0644,root,root)
+%attr(0755,root,root)
 /var/chef/cookbooks/n2klocd
 %defattr(0644,root,root)
 /var/chef/cookbooks/n2klocd/README.md
