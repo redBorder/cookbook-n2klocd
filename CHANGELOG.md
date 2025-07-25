@@ -1,6 +1,11 @@
 cookbook-n2klocd CHANGELOG
 ===============
 
+## 0.1.3
+
+  - jnavarrorb
+    - [2c76747] Remove executable permissions on non-executable files
+
 ## 0.1.2
 
   - nilsver
