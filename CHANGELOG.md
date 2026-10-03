@@ -1,6 +1,11 @@
 cookbook-n2klocd CHANGELOG
 ===============
 
+## 0.1.4
+
+  - manegron
+    - [584413f] Upload cookbook only if opscode-erchef is active
+
 ## 0.1.3
 
   - jnavarrorb
